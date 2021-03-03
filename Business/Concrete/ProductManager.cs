@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
@@ -28,11 +29,12 @@ namespace Business.Concrete
             _categoryService = categoryService;
         }
 
-
+        //Claim: iddia etmek (bu yetkilere sahip olması gerekiyor bunlara claim deniyor)
+        [SecuredOperation("product.add,editor")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
-            //Aynı isimde ürün eklenemez
+            
             IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName),
                 CheckIfProductCountOfCategoryCorrect(product.CategoryId), CheckIfCategoryLimitExceded());
 
